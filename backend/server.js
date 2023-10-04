@@ -14,11 +14,11 @@ app.use(route)
 const connectDB = async() => {
     try{
         const conn = await mongoose.connect(process.env.MONGO_URI)
-        console.log(`DB connected to -> ${conn.connection.host}`)
+        console.log(`DB connected!`)
     }catch(err){}
 }
 
 app.listen(PORT,()=>{
     connectDB()
-    console.log(`Server Listening on http://localhost:${PORT}/`)
+    console.log(`Server Running!`)
 })

@@ -1,4 +1,4 @@
-const BASE_URI = "http://localhost:7000/";
+const BASE_URI = "https://bda-miniproject-api.onrender.com";
 
 const fetchData = async (route, type) => {
   const res = await fetch(BASE_URI + route.toLowerCase());
