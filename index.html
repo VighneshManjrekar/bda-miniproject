@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BDA Mini Project</title>
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+
+
+<body>
+    <main>
+        <header>
+            <h1>
+                Sales Data Analysis
+            </h1>
+            <h2>Graphical Overview of purchased made by customers between 1st April 2023 to 1st May 2023</h2>
+        </header>
+        <div>
+            <div class="canvas-wrapper">
+                <p>City wise purchases</p>
+                <canvas id="city-wise-purchases-chart"></canvas>
+            </div>
+            <div class="canvas-wrapper">
+                <p>Week Wise Purchases</p>
+                <canvas id="week-wise-purchases-chart"></canvas>
+            </div>
+            <div class="canvas-wrapper scatter">
+                <p>Daily Sales</p>
+                <canvas id="daily-sales-chart"></canvas>
+            </div>
+            <div class="canvas-wrapper donught">
+                <p>Product Wise Purchases</p>
+                <canvas id="product-wise-purchases-chart"></canvas>
+            </div>
+            <div class="canvas-wrapper pie">
+                <p>Average Product Ratings</p>
+                <canvas id="product-average-ratings-chart"></canvas>
+            </div>
+
+        </div>
+
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./assets/script.js"></script>
+</body>
+
+</html>

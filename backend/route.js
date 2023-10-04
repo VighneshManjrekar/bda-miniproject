@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const User = require("./User.model");
 
+// To check server is running or not
 router.get("/", (req, res) => {
   return res.status(200).send("Server running");
 });
@@ -18,8 +19,15 @@ router.get("/city-wise-purchases", async (req, res) => {
           totalPurchases: { $sum: 1 },
         },
       },
+      {
+        $project: {
+          _id: 0,
+          label: "$_id",
+          data: "$totalPurchases",
+        },
+      },
     ]);
-    res.json(cityPurchases);
+    res.status(200).json(cityPurchases);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -39,8 +47,15 @@ router.get("/product-wise-purchases", async (req, res) => {
           totalPurchases: { $sum: 1 },
         },
       },
+      {
+        $project: {
+          _id: 0,
+          label: "$_id",
+          data: "$totalPurchases",
+        },
+      },
     ]);
-    res.json(productPurchases);
+    res.status(200).json(productPurchases);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -59,12 +74,13 @@ router.get("/product-average-ratings", async (req, res) => {
       },
       {
         $project: {
-          _id: 1,
-          averageRatings: { $ceil: "$averageRatings" },
+          _id: 0,
+          label: "$_id",
+          data: { $ceil: "$averageRatings" },
         },
       },
     ]);
-    res.json(productAverageRatings);
+    res.status(200).json(productAverageRatings);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -86,27 +102,66 @@ router.get("/week-wise-purchases", async (req, res) => {
       {
         $group: {
           _id: {
-            week: { $week: "$purchaseDate" },
+            label: { $week: "$purchaseDate" },
             month: { $month: "$purchaseDate" },
           },
-          totalPurchases: { $sum: 1 },
+          data: { $sum: 1 },
         },
       },
       {
         $project: {
           _id: 0,
-          week: {
-            $concat: ["Week ", { $toString: { $subtract: ["$_id.week", 12] } }],
+          label: {
+            $concat: [
+              "Week ",
+              { $toString: { $subtract: ["$_id.label", 12] } },
+            ],
           },
-          totalPurchases: 1,
+          data: 1,
         },
       },
     ]);
-    res.json(weekWisePurchases);
+    const sortedWeekWiseSalesData = weekWisePurchases.sort((a, b) => {
+      const weekA = parseInt(a.label.replace("Week ", ""));
+      const weekB = parseInt(b.label.replace("Week ", ""));
+      return weekA - weekB;
+    });
+    res.status(200).json(sortedWeekWiseSalesData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// Daily sales
+router.get("/daily-sales", async (req, res) => {
+  try {
+    const dailySales = await User.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: "$purchaseDate" },
+            month: { $month: "$purchaseDate" },
+            day: { $dayOfMonth: "$purchaseDate" },
+          },
+          data: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          data: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(dailySales);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.use("/*", (req, res) => res.status(404).send("404: Route Doesn't Exists"));
 
 module.exports = router;

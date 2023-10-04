@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config();
 const { faker } = require("@faker-js/faker");
 const mongoose = require("mongoose");
 
@@ -7,7 +7,7 @@ mongoose.connect(process.env.MONGO_URI, {
   useUnifiedTopology: true,
 });
 
-const User = require("./User.model")
+const User = require("./User.model");
 
 const products = [
   "Processor",
@@ -49,9 +49,10 @@ const generateUsers = (num) => {
   }
 
   User.insertMany(user)
-    .then((docs) =>
-      console.log(`${docs.length} users have been inserted into the database.`)
-    )
+    .then((docs) => {
+      console.log(`${docs.length} users have been inserted into the database.`);
+      process.exit(0);
+    })
     .catch((err) => {
       console.error(err);
       console.error(
@@ -59,6 +60,7 @@ const generateUsers = (num) => {
           err.writeErrors?.length ?? 0
         } errors occurred during the insertMany operation.`
       );
+      process.exit(0);
     });
 };
 
