@@ -43,4 +43,4 @@ Vighnesh Manjrekar
 
 ## Demo
 
-<img src="./assets/demo.png" />
+<img src="./frontend/demo.png" />
